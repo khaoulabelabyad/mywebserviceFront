@@ -7,7 +7,7 @@ import {Customer} from '../model/customer.model';
 
 
 @Injectable({
-  providedIn: 'root'
+
 })
 export class CustomerService {
 
@@ -36,7 +36,7 @@ export class CustomerService {
     return this.http.delete(this.baseURL + `delete/{customerId}`, { responseType: 'text' });
   }
 
-  saveCustomer(customer: Customer): Observable<any> {
+  addCustomer(customer: Customer): Observable<any> {
     console.log(customer);
     return this.http.post<any>(this.baseURL + 'customers', customer );
   }

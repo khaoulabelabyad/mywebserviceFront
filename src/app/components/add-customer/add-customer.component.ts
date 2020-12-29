@@ -4,6 +4,7 @@ import { Observable } from "rxjs";
 import { CustomerService} from '../../services/customer.service';
 import { Customer} from '../../model/customer.model';
 import { Router } from '@angular/router';
+import {FormControl, FormGroup} from '@angular/forms';
 
 @Component({
   selector: 'app-add-customer',
@@ -12,35 +13,39 @@ import { Router } from '@angular/router';
 })
 export class AddCustomerComponent implements OnInit {
 
-  customer: Customer = new Customer();
+  // @ts-ignore
+  addForm: FormGroup;
+
+
   submitted = false;
 
-  constructor(private customerService: CustomerService,
-              private router: Router) {}
+  constructor(private customerService: CustomerService) {}
 
-  ngOnInit() {
+  ngOnInit(): void {
+    this.addForm = new FormGroup({
+      firstName: new FormControl(),
+      lastName: new FormControl(),
+      email: new FormControl()
+    });
   }
 
-  newCustomer(): void {
-    this.submitted = false;
-    this.customer = new Customer();
+  addCustomer() {
+    const customer = new Customer();
+    customer.firstName = this.addForm.get(`firstName`).value;
+    customer.lastName = this.addForm.get('lastName').value;
+    customer.email = this.addForm.get('email').value;
+    console.log(customer);
+    this.customerService.addCustomer(customer).subscribe(data=> {
+      console.log(data);
+    });
   }
 
-  save() {
-    this.customerService.createCustomer(this.customer)
-      .subscribe(data => console.log(data), error => console.log(error));
-    this.customer = new Customer();
-    this.gotoList();
-  }
 
-  onSubmit() {
-    this.submitted = true;
-    this.save();
-  }
 
-  gotoList() {
-    this.router.navigate(['/customers']);
-  }
+
+
+
+
 
 
 }
